@@ -2,61 +2,62 @@ var mic;
 let micLevel;
 let roArms = 0;
 let roEye = 0;
-
+let userClick = false;
 let change0 = ('#1301C8');
 let change1 = ('#FFFF00');
 let change2 = ('#FFFFFF');
-
-let i;
 let syringe = [];
 
 function setup() {
   createCanvas(800, 800);
   angleMode(DEGREES);
-
-  mic = new p5.AudioIn();
-  mic.start();
-
-
-  for (i = 0; i <= 30; i++) {
+  text("Click to see Avatar",300,300,400,400);
+  for (let i = 0; i <= 30; i++) {
     syringe[i] = new Syringe(random(1, -1) * width * 0.6, random(1, 30) * height * -0.2, random(360), random(10) * 0.1);
   }
 }
 
+function mousePressed() {
+  mic = new p5.AudioIn();
+  mic.start();
+  userClick = true;
+}
+
 function draw() {
-  micLevel = mic.getLevel(0.5);
-  background(255, 150, 100);
-  translate(width / 2, height / 2);
-  Body();
-  Glasses(change1);
-  Eye(roEye);
-  Mouth();
-  Arms(roArms, change1);
-  Shirt(change0);
-  Hands();
-  Legs();
-  Shoes();
-  drawGround();
+  if (userClick) {
+    micLevel = mic.getLevel();
+    background(255, 150, 100);
+    translate(width / 2, height / 2);
+    Body();
+    Glasses(change1);
+    Eye(roEye);
+    Mouth();
+    Arms(roArms, change1);
+    Shirt(change0);
+    Hands();
+    Legs();
+    Shoes();
+    drawGround();
 
-  if (mouseX >= 292 & mouseX <= 510 && mouseY >= 185 && mouseY <= 615) {
-    change0 = ('#000000');
-    change1 = ('#CF00CF');
-    change2 = ('#FFFFFF');
-    drawFrank();
-  } else {
-    change0 = ('#1301C8');
-    change1 = ('#FFFF00');
-    change2 = ('#000000');
+    if (mouseX >= 292 & mouseX <= 510 && mouseY >= 185 && mouseY <= 615) {
+      change0 = ('#000000');
+      change1 = ('#CF00CF');
+      change2 = ('#FFFFFF');
+      drawFrank();
+    } else {
+      change0 = ('#1301C8');
+      change1 = ('#FFFF00');
+      change2 = ('#000000');
+    }
+
+    for (i = 0; i < syringe.length; i++) {
+      syringe[i].display();
+      syringe[i].move();
+    }
+
+    roArms = map(mic.getLevel(0.9), 0, 0.1, 377, 380);
+    roEye = map(mouseX, 0, width, 281, 290);
   }
-
-  for (i = 0; i < syringe.length; i++) {
-    syringe[i].display();
-    syringe[i].move();
-  }
-
-  roArms = map(mic.getLevel(0.9), 0, 0.1, 377, 380);
-  roEye = map(mouseX, 0, width, 281, 290);
-
 }
 
 function drawGround() {
