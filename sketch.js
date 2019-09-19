@@ -24,6 +24,7 @@ function setup() {
 }
 
 function draw() {
+  micLevel = mic.getLevel(0.5);
   background(255, 150, 100);
   translate(width / 2, height / 2);
   Body();
